@@ -1,40 +1,34 @@
-// En este ejercicio utilizaremos la API de https://jsonplaceholder.typicode.com/users. Leyendo su documentación, deberás hacer lo siguiente:
-// Imprimir por consola la lista de usuarios.
+// Crea una variable global users y cuando hagas la petición axios rellénala con la respuesta de la api (todo esto fuera de una función)
+let users = [];
 
-//API
-const url = 'https://jsonplaceholder.typicode.com/users';
-
-fetch(url)
+// Realizar la solicitud a la API
+axios.get('https://jsonplaceholder.typicode.com/users')
     .then(response => {
-        // Verificamos que la solicitud haya sido exitosa
-        if (!response.ok) {
-            throw new Error(`Error al obtener los usuarios: ${response.status}`);
-        }
-        return response.json();
+        users = response.data;
+// Imprimir por consola la lista de usuarios
+        console.log(users);  
     })
-    .then(users => {
-        // Obtenemos los contenedores donde mostraremos los datos
-        const userList = document.getElementById('user-list');
-        const userNames = document.getElementById('user-names');
-
-        // Imprimimos la lista completa de usuarios( Va en consola y por HTML)
-        users.forEach(user => {
-            const userDiv = document.createElement('div');
-            userDiv.textContent = JSON.stringify(user, null, 2);
-            userList.appendChild(userDiv);
-            console.log(user)
-        });
-
-        // Imprimimos solo los nombres de los usuarios
-        users.forEach(user => {
-            const nameDiv = document.createElement('div');
-            nameDiv.textContent = user.name;
-            userNames.appendChild(nameDiv);
-            console.log(user.name)
-        });
-    })
-
-    // Imprimir por consola solo el nombre de los usuarios.
     .catch(error => {
-        console.error('Hubo un problema con la solicitud Fetch:', error);
+        console.error('Error en la peticion', error);
     });
+
+// Crea una función que muestre por consola la variable global que habías creado
+function showUsers() {
+    // Imprimir por consola la lista de usuarios
+    console.log(users);
+}
+
+// Función para mostrar los nombres en el DOM
+function displayUserNames() {
+    const userList = document.getElementById('userList');
+    userList.innerHTML = ''; 
+    users.forEach(user => {
+        const userItem = document.createElement('p');
+// Imprimir por consola solo el nombre de los usuarios
+        userItem.textContent = user.name;
+        userList.appendChild(userItem);
+    });
+}
+
+// Crea un botón que cuando lo cliques ejecute la función que habías creado
+document.getElementById('showUsersBtn').addEventListener('click', displayUserNames);
